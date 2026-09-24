@@ -9,7 +9,6 @@ int main(int argc, char *argv[]){
     extern int optind;
     while ((c = getopt(argc, argv, "ispuU:cC:dvV:")) != -1) {
         if(c=='U'||c=='C'||c=='V'){
-            char*temp=calloc(2,sizeof(char));
             argv[optind-1]=argv[optind-2];
             argv[optind-2]=optarg;
         }
@@ -35,14 +34,15 @@ int main(int argc, char *argv[]){
             case 'u':{
                 struct rlimit rl;
                 if (getrlimit(RLIMIT_FSIZE, &rl) == 0) {
-                    printf("%ld\n",(long)rl.rlim_cur);
+                    if((long)rl.rlim_cur<0)printf("unlimited\n");
+                    else printf("%ld\n",(long)rl.rlim_cur);
                 }
                 break;
             }   
             case 'U': {
                 struct rlimit rl;
                 if (getrlimit(RLIMIT_FSIZE, &rl) == 0) {
-                    rl.rlim_cur = atoi(optarg);
+                    rl.rlim_cur = atol(optarg);
                     if (setrlimit(RLIMIT_FSIZE, &rl) == -1) {
                         perror("setrlimit");
                     }
@@ -52,7 +52,8 @@ int main(int argc, char *argv[]){
             case 'c':{
                 struct rlimit rl;
                 if (getrlimit(RLIMIT_CORE, &rl) == 0) {
-                    printf("%ld\n",(long)rl.rlim_cur);
+                    if((long)rl.rlim_cur<0)printf("unlimited\n");
+                    else printf("%ld\n",(long)rl.rlim_cur);
                 }
                 break;
             }
