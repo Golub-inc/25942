@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
         }
     }
     char **argv2=calloc(argc+1,sizeof(char*));
-    optind=0;
+    optind=1;
     argv2[0]=argv[0];
     for(int i=1;i<argc;i++)argv2[i]=argv[argc-i];
     while ((c = getopt(argc, argv2, "ispuU:cC:dvV:")) != -1) {
