@@ -32,21 +32,17 @@ int main(int argc, char *argv[]){
                 break;
             }
             case 'u':{
-                struct rlimit rl;
-                if (getrlimit(RLIMIT_FSIZE, &rl) == 0) {
-                    if((long)rl.rlim_cur<0)printf("unlimited\n");
-                    else printf("%ld\n",(long)rl.rlim_cur);
-                }
-                break;
-            }   
+                long lim;
+                lim = sysconf(_SC_CHILD_MAX);
+                if(lim<0)printf("unlimited\n");
+                else printf("%ld\n",lim);
+            break;
+            }
             case 'U': {
-                struct rlimit rl;
-                if (getrlimit(RLIMIT_FSIZE, &rl) == 0) {
-                    rl.rlim_cur = atol(optarg);
-                    if (setrlimit(RLIMIT_FSIZE, &rl) == -1) {
-                        perror("setrlimit");
-                    }
-                }
+                long lim;
+                lim = atol(optarg);
+                (void)lim;
+                fprintf(stderr, "setrlimit: operation not supported\n");
                 break;
             }
             case 'c':{
